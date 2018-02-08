@@ -24,6 +24,9 @@ unzip awscli-bundle.zip
 chmod +x ./awscli-bundle/install
 ./awscli-bundle/install -i /tmp/aws
 
+#install slacktee
+chmod +x ./bin/slacktee.sh
+
 BACKUP_FILE_NAME="$(date +"%Y-%m-%d-%H-%M")-$APP-$DATABASE.dump"
 
 heroku pg:backups capture $DATABASE --app $APP
@@ -39,3 +42,6 @@ fi
 
 echo "backup $FINAL_FILE_NAME complete"
 
+if [[ -z "$SLACK_WEBHOOK_URL" ]]; then
+  echo "backup $FINAL_FILE_NAME complete" | ./bin/slacktee.sh
+fi
